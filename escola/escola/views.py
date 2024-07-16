@@ -2,11 +2,13 @@ from escola.models import Estudante, Curso, Matricula
 from escola.serializer import (
     EstudanteSerializer,
     CursoSerializer,
+    EstudanteSerializerV2,
     MatriculaSerializer,
     ListaMatriculasEstudantesSerializer,
     ListaMatriculasCursoSerializer,
 )
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 # from rest_framework.authentication import BasicAuthentication
 # from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 
@@ -15,7 +17,15 @@ class EstudanteViewSet(viewsets.ModelViewSet):
     # authentication_classes = [BasicAuthentication]
     # permission_classes = [IsAuthenticated]
     queryset = Estudante.objects.all()
-    serializer_class = EstudanteSerializer
+    # serializer_class = EstudanteSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    ordering_fields = ["nome"]
+    search_fields = ["nome", "cpf"]
+    
+    def get_serializer_class(self):
+        if self.request.version == "v2":
+            return EstudanteSerializerV2
+        return EstudanteSerializer
 
 
 class CursoViewSet(viewsets.ModelViewSet):

@@ -16,7 +16,11 @@ class Estudantes(admin.ModelAdmin):
         "nome",
     )
     list_per_page = 20
-    search_fields = ("nome",)
+    search_fields = (
+        "nome",
+        "cpf",
+    )
+    ordering = ("nome",)
 
 
 admin.site.register(Estudante, Estudantes)
@@ -45,9 +49,7 @@ class Matriculas(admin.ModelAdmin):
         "curso",
         "periodo",
     )
-    list_display_links = (
-        "id",
-    )
+    list_display_links = ("id",)
 
 
 admin.site.register(Matricula, Matriculas)
